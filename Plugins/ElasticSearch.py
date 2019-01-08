@@ -7,7 +7,7 @@ def parse_it(ip, port, https=False, timeout=5):
     base_url = 'https://%s:%s' % (ip, port) if https else 'http://%s:%s/' % (ip, port)
     cat_url = base_url + '_cat/indices?v'
     try:
-        req = requests.get(cat_url)
+        req = requests.get(cat_url, timeout=timeout)
         text = req.text
         info = {"index_count": len(text.split("\n")), "indices": []}
         try:
@@ -39,10 +39,10 @@ def parse_it(ip, port, https=False, timeout=5):
         except Exception as e:
             print(e)
         return Result(ip, port, info=info, success=True)
-    except requests.RequestException as e:
+    except Exception as e:
         print(e)
         return Result(success=False, ip=ip, port=port, info={"failed"})
 
 
 if __name__ == '__main__':
-    print(parse_it(ip='61.183.197.6', port=9200))
+    print(parse_it(ip='61.13.197.6', port=9200))
